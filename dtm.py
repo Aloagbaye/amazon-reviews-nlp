@@ -4,16 +4,15 @@ import re
 import string
 from sklearn.feature_extraction.text import CountVectorizer
 
-df = pd.read_csv("amazonreviews.csv")
-df_reviews = df.reviews
-num_reviews = df_reviews.shape[0]
-doc_set = [df_reviews[i] for i in range(num_reviews)]
 
-df = df[['reviews', 'Product Links']]
-column_headers = ['reviews', 'products']
-df.columns = column_headers
-dff = df.groupby(['products'])
-dff = dff.first()
+def combine_reviews(file):
+    dfa = pd.read_csv(file)
+    dfa = dfa[['reviews', 'Product Links']]
+    column_headers = ['reviews', 'products']
+    dfa.columns = column_headers
+    dff = dfa.groupby(['products'])
+    dff = dff.first()
+    return dff
 
 
 # clean text
@@ -28,10 +27,15 @@ def clean_text(text):
     return text
 
 
-cleandata = lambda x: clean_text(x)
-data_clean = pd.DataFrame(dff.reviews.apply(cleandata))
+def create_dtm(data):
+    data_clean = pd.DataFrame(data.reviews.apply(clean_text))
+    cv = CountVectorizer(stop_words='english')
+    data_cv = cv.fit_transform(data_clean.reviews)
+    data_dtm = pd.DataFrame(data_cv.toarray(), columns=cv.get_feature_names())
+    data_dtm.index = data_clean.index
+    return data_dtm
 
-cv = CountVectorizer(stop_words='english')
-data_cv = cv.fit_transform(data_clean.reviews)
-data_dtm = pd.DataFrame(data_cv.toarray(), columns=cv.get_feature_names())
-data_dtm.index = data_clean.index
+
+filename = 'amazonreviews.csv'
+df = combine_reviews(filename)
+dtm = create_dtm(df)
