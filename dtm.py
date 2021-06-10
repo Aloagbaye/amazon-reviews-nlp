@@ -36,6 +36,8 @@ def create_dtm(data):
     return data_dtm
 
 
-filename = 'amazonreviews.csv'
-df = combine_reviews(filename)
-dtm = create_dtm(df)
+if __name__ == "__main__":
+    filename = 'amazonreviews.csv'
+    df = combine_reviews(filename)
+    dtm = create_dtm(df)
+    dtm.to_pickle("dtm.pkl")

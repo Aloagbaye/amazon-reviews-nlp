@@ -6,7 +6,7 @@ from sklearn.decomposition import LatentDirichletAllocation, TruncatedSVD
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.model_selection import GridSearchCV
 
-dtm = pd.read_pickle("dtm_stop.pkl")
+dtm = pd.read_pickle("dtm.pkl")
 
 
 # Build LDA Model

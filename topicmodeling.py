@@ -2,6 +2,8 @@
 import nltk
 import pandas as pd
 from nltk.stem import WordNetLemmatizer
+import re
+import string
 
 nltk.download("wordnet")
 lemmatizer = WordNetLemmatizer()
@@ -39,10 +41,20 @@ for doc in doc_set:
 texts_dict = corpora.Dictionary(texts)
 texts_dict.save('reviews.dict')
 
-print("IDs 1 through 10: {}".format(sorted(texts_dict.token2id.items(), key=operator.itemgetter(1), reverse=False)[:10]))
 
-wordcheck = df_reviews.str.contains("price").value_counts()
-ax = wordcheck.plot.bar(rot=0)
+def clean_text(text):
+    text = text.lower()
+    text = re.sub('\[.*?\]', '', text)
+    text = re.sub('[%s]' % re.escape(string.punctuation), '', text)
+    text = re.sub('\w*\d\w*', '', text)
+    text = re.sub('[0-9]', '', text)
+    text = re.sub('[‘’“”…]', '', text)
+    text = re.sub('\n', '', text)
+    return text
+
+
+cleandata = lambda x: clean_text(x)
+data_clean = pd.DataFrame(df.reviews.apply(cleandata))
 
 corpus = [texts_dict.doc2bow(text) for text in texts]
 # Save a corpus to disk in the sparse coordinate Matrix Market format in a serialized format instead of random
