@@ -99,6 +99,7 @@ def create_reviews_csv():
     idis = product_id(products_to_review)
     create_links(idis)
 
+
 if __name__ == "__main__":
     product_to_review = input("What products would you like to search for?")
     ids = product_id(product_to_review)
