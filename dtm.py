@@ -44,7 +44,4 @@ def run_dtm():
 
 
 if __name__ == "__main__":
-    filename = 'amazonreviews.csv'
-    df = combine_reviews(filename)
-    dtm = create_dtm(df)
-    dtm.to_pickle("dtm.pkl")
+    run_dtm()

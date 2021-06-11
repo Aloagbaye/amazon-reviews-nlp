@@ -40,7 +40,7 @@ def dominant_topic(model):
     # Get dominant topic for each document
     dom_topic = np.argmax(df.values, axis=1)
     df['dominant_topic'] = dominant_topic
-    return df_document_topic
+    return df
 
 
 # Styling
@@ -59,10 +59,8 @@ def run_lda():
     df_dt = dominant_topic(results)
     # Apply Style
     df_dts = df_dt.style.applymap(color_red).applymap(make_bold)
+    df_dt.to_csv("dominanttopics.csv")
 
 
 if __name__ == "__main__":
-    result = lda_grid_search(3, 4, 5, 0.3, 0.5, 0.7)
-    df_document_topic = dominant_topic(result)
-    # Apply Style
-    df_document_topics = df_document_topic.head(15).style.applymap(color_red).applymap(make_bold)
+    run_lda()
