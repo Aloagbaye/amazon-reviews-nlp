@@ -6,11 +6,9 @@ from sklearn.decomposition import LatentDirichletAllocation, TruncatedSVD
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.model_selection import GridSearchCV
 
-dtm = pd.read_pickle("dtm.pkl")
-
 
 # Build LDA Model
-def lda_grid_search(n1, n2, n3, d1, d2, d3):
+def lda_grid_search(dtm, n1, n2, n3, d1, d2, d3):
     # Define Search Param
     search_params = {'n_components': [n1, n2, n3], 'learning_decay': [d1, d2, d3]}
     # Init the Model
@@ -28,19 +26,24 @@ def lda_grid_search(n1, n2, n3, d1, d2, d3):
     return model
 
 
-def dominant_topic(model):
+def dominant_topic(dtm, model):
     # Create Document - Topic Matrix
     lda_output = model.best_estimator_.transform(dtm)
     # column names
     topicnames = ["Topic" + str(i) for i in range(model.best_estimator_.n_components)]
-    # index names
-    docnames = ["Doc" + str(i) for i in range(dtm.shape[0])]
-    # Make the pandas dataframe
-    df = pd.DataFrame(np.round(lda_output, 2), columns=topicnames, index=docnames)
+    df = pd.DataFrame(np.round(lda_output, 2), columns=topicnames, index=dtm.index)
     # Get dominant topic for each document
     dom_topic = np.argmax(df.values, axis=1)
-    df['dominant_topic'] = dominant_topic
+    df['dominant_topic'] = dom_topic
     return df
+
+
+def display_topics(model, feature_names, no_top_words):
+    topic_dict = {}
+    for topic_id, topic in enumerate(model.components_):
+        topic_list = [feature_names[i] for i in topic.argsort()[:-no_top_words - 1:-1]]
+        topic_dict[topic_id] = topic_list
+    return topic_dict
 
 
 # Styling
@@ -54,13 +57,18 @@ def make_bold(val):
     return 'font-weight: {weight}'.format(weight=weight)
 
 
-def run_lda():
-    results = lda_grid_search(3, 4, 5, 0.3, 0.5, 0.7)
-    df_dt = dominant_topic(results)
+def run_lda(dtm, no_top_words):
+    results = lda_grid_search(dtm, 3, 4, 5, 0.3, 0.5, 0.7)
+    features = dtm.columns
+    df_dt = dominant_topic(dtm, results)
+    topics_dict = display_topics(results.best_estimator_, features, no_top_words)
+    df_dt['topic_words'] = df_dt['dominant_topic'].apply(lambda x: topics_dict.get(x))
+    # df_dt['dominant_topic']
     # Apply Style
-    df_dts = df_dt.style.applymap(color_red).applymap(make_bold)
+    # df_dts = df_dt.style.applymap(color_red).applymap(make_bold)
     df_dt.to_csv("dominanttopics.csv")
 
 
 if __name__ == "__main__":
-    run_lda()
+    dtmx = pd.read_pickle("dtm.pkl")
+    run_lda(dtmx, 10)
