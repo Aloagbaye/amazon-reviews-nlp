@@ -5,6 +5,9 @@ It is not always easy to select the best product from a myriad of products on Am
 
 
 # Dependencies
+pandas
+scikit-learn
+re
 Tensorflow;
 spACy;
 nltk;
