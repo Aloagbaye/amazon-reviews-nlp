@@ -9,6 +9,7 @@ header = {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/5
 base_url = "https://www.amazon.ca/s?k="
 
 
+# Function for searching amazon products given product name
 def get_amazon_search(search_products):
     url = "https://www.amazon.ca/s?k=" + search_products
     print(url)
@@ -19,6 +20,7 @@ def get_amazon_search(search_products):
         return "Error"
 
 
+# Function for searching amazon products given product ID
 def search_product_id(asin):
     url = "https://www.amazon.ca/dp/" + asin
     print(url)
@@ -29,6 +31,7 @@ def search_product_id(asin):
         return "Error"
 
 
+# Function for scraping amazon product reviews
 def scrape_reviews(review_link):
     url = "https://www.amazon.ca" + review_link
     print(url)
@@ -39,6 +42,7 @@ def scrape_reviews(review_link):
         return "Error"
 
 
+# Function for scraping amazon product names
 def get_product_names(product):
     product_names = []
     response = get_amazon_search(product)
@@ -49,6 +53,7 @@ def get_product_names(product):
     return product_names
 
 
+# returns product ID for all products
 def product_id(product):
     data_asin = []
     response = get_amazon_search(product)
@@ -58,6 +63,7 @@ def product_id(product):
     return data_asin
 
 
+# creates csv file containing all amazon product reviews
 def create_links(product_ids):
     links = []
     reviews = []
