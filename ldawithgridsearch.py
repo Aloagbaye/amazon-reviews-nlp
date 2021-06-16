@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 
-# SKLearn
 from sklearn.decomposition import LatentDirichletAllocation
 from sklearn.model_selection import GridSearchCV
 

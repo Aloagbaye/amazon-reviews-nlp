@@ -1,4 +1,3 @@
-# Import dependencies
 import pandas as pd
 import re
 import string
@@ -17,7 +16,6 @@ def combine_reviews(file):
     return dff
 
 
-# Let's create a function to pull out nouns from a string of text
 def nouns_adj(texts):
     is_noun_adj = lambda pos: pos[:2] == 'NN' or pos[:2] == 'JJ'
     tokenized = word_tokenize(texts)
@@ -32,7 +30,6 @@ def nouns(texts):
     return ' '.join(all_nouns)
 
 
-# clean text
 def clean_text(texts):
     texts = texts.lower()
     texts = re.sub('\[.*?\]', '', texts)
