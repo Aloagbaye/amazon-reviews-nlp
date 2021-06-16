@@ -1,9 +1,8 @@
 import numpy as np
 import pandas as pd
-import re, nltk, spacy, gensim
+
 # SKLearn
-from sklearn.decomposition import LatentDirichletAllocation, TruncatedSVD
-from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+from sklearn.decomposition import LatentDirichletAllocation
 from sklearn.model_selection import GridSearchCV
 
 
@@ -58,7 +57,7 @@ def make_bold(val):
 
 
 def run_lda(dtm, no_top_words):
-    results = lda_grid_search(dtm, 3, 4, 5, 0.3, 0.5, 0.7)
+    results = lda_grid_search(dtm, 5, 7, 10, 0.3, 0.5, 0.7)
     features = dtm.columns
     df_dt = dominant_topic(dtm, results)
     topics_dict = display_topics(results.best_estimator_, features, no_top_words)
@@ -66,9 +65,9 @@ def run_lda(dtm, no_top_words):
     # df_dt['dominant_topic']
     # Apply Style
     # df_dts = df_dt.style.applymap(color_red).applymap(make_bold)
-    df_dt.to_csv("dominanttopics.csv")
+    df_dt.to_csv("dominanttopics_adj_5_5.csv")
 
 
 if __name__ == "__main__":
     dtmx = pd.read_pickle("dtm.pkl")
-    run_lda(dtmx, 10)
+    run_lda(dtmx, 5)
