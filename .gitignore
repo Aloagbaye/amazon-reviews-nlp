@@ -1,0 +1,9 @@
+*.pdf
+*.ipynb
+*.dict
+*.mm
+*.index
+*.pkl
+.ipynb_checkpoints
+__pycache__/
+.idea/
