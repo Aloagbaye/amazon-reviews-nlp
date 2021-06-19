@@ -88,7 +88,6 @@ def create_links(product_ids):
     product_dict = {'products': product_link}
     all_reviews = pd.DataFrame.from_dict(review_dict)
     product_list = pd.DataFrame.from_dict(product_dict)
-
     columnheaders = ['reviews']
     all_reviews.columns = columnheaders
     for column in all_reviews.columns:
@@ -99,11 +98,7 @@ def create_links(product_ids):
     return all_reviews
 
 
-def create_reviews_csv():
-    products_to_review = input("What products would you like to search for?")
+def run_webscraping(products_to_review):
     idis = product_id(products_to_review)
     create_links(idis)
 
-
-if __name__ == "__main__":
-    create_reviews_csv()

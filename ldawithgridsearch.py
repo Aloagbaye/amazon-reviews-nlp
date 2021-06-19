@@ -67,6 +67,7 @@ def run_lda(dtm, no_top_words):
     df_dt.to_csv("dominanttopics_adj_5_5.csv")
 
 
+
 if __name__ == "__main__":
     dtmx = pd.read_pickle("dtm.pkl")
     run_lda(dtmx, 5)
