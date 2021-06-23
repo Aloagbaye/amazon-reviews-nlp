@@ -1,13 +1,12 @@
+import re, string
 import pandas as pd
-import re
-import string
 from sklearn.feature_extraction import text
 from sklearn.feature_extraction.text import CountVectorizer
 from nltk import word_tokenize, pos_tag
 
 
 def combine_reviews(file):
-    dfa = pd.read_csv(file)
+    # dfa = pd.read_csv(file)
     dfa = dfa[['reviews', 'Product Links']]
     column_headers = ['reviews', 'products']
     dfa.columns = column_headers
@@ -16,18 +15,15 @@ def combine_reviews(file):
     return dff
 
 
-def nouns_adj(texts):
-    is_noun_adj = lambda pos: pos[:2] == 'NN' or pos[:2] == 'JJ'
-    tokenized = word_tokenize(texts)
-    nouns_adje = [word for (word, pos) in pos_tag(tokenized) if is_noun_adj(pos)]
-    return ' '.join(nouns_adje)
-
-
-def nouns(texts):
-    is_noun = lambda pos: pos[:2] == 'NN'
-    tokenized = word_tokenize(texts)
-    all_nouns = [word for (word, pos) in pos_tag(tokenized) if is_noun(pos)]
-    return ' '.join(all_nouns)
+def nouns_adj(texts, with_adj):
+    if with_adj == "adjectives":
+        tokenized = word_tokenize(texts)
+        nouns_adje = [word for (word, pos) in pos_tag(tokenized) if lambda pos: pos[:2] == 'NN' or pos[:2] == 'JJ']
+        return ' '.join(nouns_adje)
+    else:
+        tokenized = word_tokenize(texts)
+        all_nouns = [word for (word, pos) in pos_tag(tokenized) if lambda pos: pos[:2] == 'NN']
+        return ' '.join(all_nouns)
 
 
 def clean_text(texts):
@@ -38,7 +34,7 @@ def clean_text(texts):
     texts = re.sub('[0-9]', '', texts)
     texts = re.sub('[‘’“”…]', '', texts)
     texts = re.sub('\n', '', texts)
-    texts = nouns_adj(texts)
+    texts = nouns_adj(texts,"adjectives")
     return texts
 
 
