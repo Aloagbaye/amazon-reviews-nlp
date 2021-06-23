@@ -16,11 +16,15 @@ def index():
 def submit():
     if request.method == 'POST':
         product = request.form['product']
-        run_webscraping(products_to_review=product)
-        dtm = run_dtm()
-        df = run_lda(dtm, 5)
-    return render_template('index.html', prediction_text='{}'.format(df))
+        if product == '':
+            return render_template('index.html', message='Please enter required fields')
+        else:
+            file = run_webscraping(products_to_review=product)
+            dtm = run_dtm(file)
+            df = run_lda(dtm, 5)
+            return render_template('results.html', tables=[df.to_html(classes='data')], header="true")
 
 
 if __name__ == '__main__':
+    app.debug = True
     app.run()
