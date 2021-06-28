@@ -5,13 +5,13 @@ from configparser import ConfigParser
 
 config_object = ConfigParser()
 config_object.read("config.ini")
-userinfo = config_object["BASEURL"]
+url_params = config_object["BASEURL"]
 
-header = userinfo["header"]
-base_url = userinfo["base_url"]
-reviews_url = userinfo["reviews_url"]
-ids_url = userinfo["ids_url"]
-review_limit = userinfo["review_limit"]
+header = url_params["header"]
+base_url = url_params["base_url"]
+reviews_url = url_params["reviews_url"]
+ids_url = url_params["ids_url"]
+review_limit = url_params["review_limit"]
 
 
 # Function for searching product page given the url
