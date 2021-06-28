@@ -3,11 +3,8 @@ import pandas as pd
 from bs4 import BeautifulSoup
 from configparser import ConfigParser
 
-# Read config.ini file
 config_object = ConfigParser()
 config_object.read("config.ini")
-
-# Get the password
 userinfo = config_object["BASEURL"]
 
 header = userinfo["header"]
