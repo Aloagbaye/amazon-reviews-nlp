@@ -7,11 +7,13 @@ config_object = ConfigParser()
 config_object.read("config.ini")
 url_params = config_object["BASEURL"]
 
-header = url_params["header"]
+header = {'authority': url_params["authority"],
+          'User-Agent': url_params['user-agent'],
+          'X-Amzn-Trace-Id': url_params['x-amzn-trace-Id']}
 base_url = url_params["base_url"]
 reviews_url = url_params["reviews_url"]
 ids_url = url_params["ids_url"]
-review_limit = url_params["review_limit"]
+review_limit = int(url_params["review_limit"])
 
 
 def get_amazon_search(url):
@@ -48,14 +50,14 @@ def pull_reviews(links):
         review_url = reviews_url + links[link] + '&pageNumber=' + str(page_number)
         soup = get_amazon_search(review_url)
         for review in soup.findAll("span", {'data-hook': "review-body"}):
-            reviews.append(review.text.str.replace(r'\n\n', ''))
+            reviews.append(review.text.str.replace('\n\n', ''))
             product_link.append(review_url + links[link])
         while soup.findAll("span", {'data-hook': "review-body"}) and page_number <= review_limit:
             page_number = page_number + 1
             review_url = reviews_url + links[link] + '&pageNumber=' + str(page_number)
             soup = get_amazon_search(review_url)
             for review in soup.findAll("span", {'data-hook': "review-body"}):
-                reviews.append(review.text.str.replace(r'\n\n', ''))
+                reviews.append(review.text.str.replace('\n\n', ''))
                 product_link.append(review_url + links[link])
     return reviews, product_link
 
