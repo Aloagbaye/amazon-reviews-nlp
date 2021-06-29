@@ -14,14 +14,12 @@ ids_url = url_params["ids_url"]
 review_limit = url_params["review_limit"]
 
 
-# Function for searching product page given the url
 def get_amazon_search(url):
     page = requests.get(url, cookies={}, headers=header)
     soup = BeautifulSoup(page.content)
     return soup
 
 
-# returns product ID for all products
 def product_id(product):
     data_asin = []
     url = base_url + product
@@ -31,7 +29,6 @@ def product_id(product):
     return data_asin
 
 
-# creates the links to all product reviews page
 def create_links(product_ids):
     links = []
     for i in range(len(product_ids)):
@@ -43,7 +40,6 @@ def create_links(product_ids):
     return links
 
 
-# pulls the reviews on each page using the links from create_links
 def pull_reviews(links):
     reviews = []
     product_link = []
@@ -52,35 +48,30 @@ def pull_reviews(links):
         review_url = reviews_url + links[link] + '&pageNumber=' + str(page_number)
         soup = get_amazon_search(review_url)
         for review in soup.findAll("span", {'data-hook': "review-body"}):
-            reviews.append(review.text)
+            reviews.append(review.text.str.replace(r'\n\n', ''))
             product_link.append(review_url + links[link])
         while soup.findAll("span", {'data-hook': "review-body"}) and page_number <= review_limit:
             page_number = page_number + 1
             review_url = reviews_url + links[link] + '&pageNumber=' + str(page_number)
             soup = get_amazon_search(review_url)
             for review in soup.findAll("span", {'data-hook': "review-body"}):
-                reviews.append(review.text)
+                reviews.append(review.text.str.replace(r'\n\n', ''))
                 product_link.append(review_url + links[link])
     return reviews, product_link
 
 
-# combines all the reviews as a dataframe for each product
 def combine_reviews(reviews, product_link):
     review_dict = {'reviews': reviews}
     product_dict = {'links': product_link}
     product_names = {'products': [link.split('/')[3] for link in product_link]}
-    all_reviews = pd.DataFrame.from_dict(review_dict)
     product_links = pd.DataFrame.from_dict(product_dict)
     products = pd.DataFrame.from_dict(product_names)
-    for column in all_reviews.columns:
-        all_reviews[column] = all_reviews[column].str.replace(r'\n\n', '')
-    all_reviews.drop(index=0, inplace=True)
+    all_reviews = pd.DataFrame.from_dict(review_dict)
     all_reviews['links'] = product_links['links']
     all_reviews['products'] = products['products']
     return all_reviews
 
 
-# main function for running all other functions
 def run_webscraping(products_to_review):
     idis = product_id(products_to_review)
     links = create_links(idis)
