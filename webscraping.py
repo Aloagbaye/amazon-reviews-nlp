@@ -50,14 +50,14 @@ def pull_reviews(links):
         review_url = reviews_url + links[link] + '&pageNumber=' + str(page_number)
         soup = get_amazon_search(review_url)
         for review in soup.findAll("span", {'data-hook': "review-body"}):
-            reviews.append(review.text.str.replace('\n\n', ''))
+            reviews.append(review.text.replace('\n\n', ''))
             product_link.append(review_url + links[link])
         while soup.findAll("span", {'data-hook': "review-body"}) and page_number <= review_limit:
             page_number = page_number + 1
             review_url = reviews_url + links[link] + '&pageNumber=' + str(page_number)
             soup = get_amazon_search(review_url)
             for review in soup.findAll("span", {'data-hook': "review-body"}):
-                reviews.append(review.text.str.replace('\n\n', ''))
+                reviews.append(review.text.replace('\n\n', ''))
                 product_link.append(review_url + links[link])
     return reviews, product_link
 
