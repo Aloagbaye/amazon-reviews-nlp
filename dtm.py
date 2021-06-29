@@ -32,7 +32,7 @@ def clean_text(texts):
     texts = re.sub('[‘’“”…]', '', texts)
     texts = re.sub("[^A-Za-z]", ' ', texts)
     texts = re.sub('\n', '', texts)
-    texts = nouns_adj(texts)
+    texts = nouns_adj(texts, "adjectives")
     return texts
 
 
