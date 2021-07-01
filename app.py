@@ -9,7 +9,17 @@ config_object.read("config.ini")
 LDA_params = config_object["LDA"]
 
 no_of_top_words = int(LDA_params['no_of_top_words'])
-base_html = LDA_params['base']
+base_html = """ 
+<!doctype html> 
+<html><head> <meta http-equiv="Content-type" content="text/html; charset=utf-8"> 
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.css">
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
+</head><body>%s<script type="text/javascript">$(document).ready(function(){$('table').DataTable({
+    "pageLength": 10
+});});</script>
+</body></html>
+"""
 
 
 app = Flask(__name__)
@@ -34,5 +44,5 @@ def submit():
 
 
 if __name__ == '__main__':
-    app.debug = True
+    app.debug = False
     app.run()
