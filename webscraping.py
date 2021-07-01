@@ -14,6 +14,7 @@ base_url = url_params["base_url"]
 reviews_url = url_params["reviews_url"]
 ids_url = url_params["ids_url"]
 review_limit = int(url_params["review_limit"])
+max_no_of_products = int(url_params["max_products"])
 
 
 def get_amazon_search(url):
@@ -28,7 +29,7 @@ def product_id(product):
     soup = get_amazon_search(url)
     for i in soup.findAll("div", {'class': "sg-col-4-of-12 s-result-item s-asin sg-col-4-of-16 sg-col sg-col-4-of-20"}):
         data_asin.append(i['data-asin'])
-    return data_asin
+    return data_asin[0:max_no_of_products]
 
 
 def create_links(product_ids):
