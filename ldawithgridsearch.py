@@ -8,23 +8,8 @@ config_object = ConfigParser()
 config_object.read("config.ini")
 LDA_params = config_object["LDA"]
 
-# no of components
-n1 = int(LDA_params["no_of_components_1"])
-n2 = int(LDA_params["no_of_components_2"])
-n3 = int(LDA_params["no_of_components_3"])
-
-# Learning decay
-d1 = float(LDA_params["learning_decay_1"])
-d2 = float(LDA_params["learning_decay_2"])
-d3 = float(LDA_params["learning_decay_3"])
-
-
-def lda_grid_search(dtm, n_1, n_2, n_3, d_1, d_2, d_3):
-    search_params = {'n_components': [n_1, n_2, n_3], 'learning_decay': [d_1, d_2, d_3]}  # Define Search Param
-    lda = LatentDirichletAllocation()  # Initialize the Model
-    model = GridSearchCV(lda, param_grid=search_params)  # Initialize Grid Search Class
-    model.fit(dtm)  # Do the Grid Search
-    return model
+no_of_topics = int(LDA_params["no_of_components"])
+max_iteration = int(LDA_params["max_iter"])
 
 
 def dominant_topic(dtm, model):
@@ -45,10 +30,10 @@ def display_topics(model, feature_names, no_top_words):
 
 
 def run_lda(dtm, links, no_of_top_words):
-    results = lda_grid_search(dtm, n1, n2, n3, d1, d2, d3)
+    results = LatentDirichletAllocation(n_topics=no_of_topics, max_iter=max_iteration).fit(dtm)
     features = dtm.columns
     df_dt = dominant_topic(dtm, results)
-    topics_dict = display_topics(results.best_estimator_, features, no_of_top_words)
+    topics_dict = display_topics(results, features, no_of_top_words)
     df_dt['topic_words'] = df_dt['dominant_topic'].apply(lambda x: topics_dict.get(x))
     product_names = {'products': [link.split('/')[3] for link in links]}
     df_dt['products'] = pd.DataFrame.from_dict(product_names)['products']
