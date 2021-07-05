@@ -13,8 +13,8 @@ max_iteration = int(LDA_params["max_iter"])
 
 
 def dominant_topic(dtm, model):
-    lda_output = model.best_estimator_.transform(dtm)
-    topicnames = ["Topic" + str(i) for i in range(model.best_estimator_.n_components)]
+    lda_output = model.transform(dtm)
+    topicnames = ["Topic" + str(i) for i in range(model.n_components)]
     df = pd.DataFrame(np.round(lda_output, 2), columns=topicnames, index=dtm.index)
     dom_topic = np.argmax(df.values, axis=1)  # Get dominant topic for each document
     df['dominant_topic'] = dom_topic
@@ -30,7 +30,7 @@ def display_topics(model, feature_names, no_top_words):
 
 
 def run_lda(dtm, links, no_of_top_words):
-    results = LatentDirichletAllocation(n_topics=no_of_topics, max_iter=max_iteration).fit(dtm)
+    results = LatentDirichletAllocation(n_components=no_of_topics, max_iter=max_iteration).fit(dtm)
     features = dtm.columns
     df_dt = dominant_topic(dtm, results)
     topics_dict = display_topics(results, features, no_of_top_words)
