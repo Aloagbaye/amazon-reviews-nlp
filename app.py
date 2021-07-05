@@ -41,6 +41,8 @@ def submit():
             dtm, links = run_dtm(file)
             df = run_lda(dtm, links, no_of_top_words)
             return render_template('results.html', tables=[base_html % df.to_html(classes='data')], header="true")
+    else:
+        return render_template('index.html', message='Please enter required fields')
 
 
 if __name__ == '__main__':
