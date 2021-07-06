@@ -18,7 +18,13 @@ pip install -r requirements.txt
 ```
 
 ## Architecture
-[A graphic of the pipeline would be very helpful here. Explain what the repo does in each step - but keep it short and let the schematic do the explaing for you]
+app.py --> templates/index.html --> webscraping.py --> dtm.py --> ldawithgridsearch.py --> templates/results.html
+- app.py opens the user interface for collecting product names from the users
+- index.html is the uder interface for collecting product names used in scraping reviews from amazon.ca
+- webscraping.py scrapes reviews of products from amazon and organizes these reviews into a dataframe of products, links and reviews
+- dtm.py collects the dataframe from webscraping.py and converts it to a document-term-matrix useful for topic modelling
+- ldawithgridsearch.py applies topic modeling to the document-term-matrix and produces a dataframe containing results of the top five words discussed in the reviews for each product
+- results.html displays the dataframe results in html.
 
 ## Dependencies
 The backend is developed in python 3.x.x. Other libraries and packages, along with their versions, are included in [requirements.txt]('../../requirements.txt'). In short, you need the following libraries and their dependencies.
@@ -27,6 +33,7 @@ The backend is developed in python 3.x.x. Other libraries and packages, along wi
 - scikit-learn
 - flask
 - Beautiful soup
+- nltk
 
 ## Usage
 [How would one run this code? Give the command to run the code].
