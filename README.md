@@ -36,4 +36,4 @@ The backend is developed in python 3.x.x. Other libraries and packages, along wi
 - nltk
 
 ## Usage
-[How would one run this code? Give the command to run the code].
+<a href="amazonreviewsanalytics.herokuapp.com">visit web app</a>
